@@ -1,0 +1,84 @@
+Dia1
+------------------------
+
+------------------------
+************************
+------------------------
+
+Dia2
+------------------------
+Aulas 2,3,5 e 6
+Sobre a função log, variáveis
+ bons modos e como criá-las,
+exercício sobre log.
+------------------------
+************************
+------------------------
+Dia3
+------------------------
+Sobre constantes, como declarar
+bons modos, situação real do uso
+função que retorna o tipo do dado,
+função que executa expressão dentro
+do string, imprimindo o resultado, 
+isso.
+------------------------
+************************
+------------------------
+Dia4
+------------------------
+Primeira diferença entre let
+e var, tipos de dados primitivos,
+como converter strings para number
+e flutuante, operadores aritméticos,
+operadores de atribuição.
+------------------------
+************************
+------------------------
+Dia5
+------------------------
+Como conectar ao navegador usando um script JS com um caminho HTML, primeiros comandos no Script, boas práticas ao criar um projeto assim, alert, confirm e prompt
+Revisão da aula 21, com 
+alert, confirm e prompt.
+------------------------
+************************
+------------------------
+Dia 6
+------------------------
+Mais coisas sobre strings, funções, exercício criando página na web mesclando conceitos da aula 5 e aprendido hoje.
+------------------------
+************************
+------------------------
+
+Dia7
+------------------------
+Ensina a criar páginas com HTML e JS, alterando o HTML dos elementos individualmente.
+------------------------
+************************
+------------------------
+Dia8
+------------------------
+Sobre arrays, ensina funções
+para trocar, pop, push, use 
+para quando for mecher com 
+arrays.
+------------------------
+************************
+------------------------
+Dia9
+------------------------
+Funções simples, como 
+criar, fazer retornar,
+retornar sem argumento,
+modos de declaração 
+anônima e arrow function.
+------------------------
+************************
+------------------------
+Dia10
+------------------------
+Objetos, com criar, e tipos primitivos.
+------------------------
+************************
+------------------------
+
