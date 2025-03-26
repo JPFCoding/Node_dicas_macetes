@@ -5,7 +5,7 @@ const sqlite3 = require('sqlite3').verbose();/*sqlite 3 é a biblioteca que perm
                                     trabalhar com sqlite3 no node. Verbose significa
                                     trabalhar no modo verboso, com comentários mais 
                                     detalhados.*/
-const database = new sqlite3.database("empresa.db", (err)=>{
+const database = new sqlite3.Database("empresa.db", (err)=>{
     if(err){
         console.error(err);
     }else{
@@ -23,7 +23,7 @@ conexão com o banco de dados empresa.db, caso ela não exista.*/
 
 
 //função pra ciar tabela caso não exista no banco de dados empresa.db
-db.run(`CREATE TABLE IF NOT EXISTS produtos( 
+database.run(`CREATE TABLE IF NOT EXISTS produtos( 
         ProductID INTEGER PRIMARY KEY AUTOINCREMENT,
         ProductName text,
         SupplierID INTEGER,
@@ -43,13 +43,15 @@ db.run(`CREATE TABLE IF NOT EXISTS produtos(
 
 //realiza todas as consultas de uma tabela produtos.
 const search = (callback)=>{
-    db.all("SELECT *FROM produtos", (err, rows)=>{
+    database.all("SELECT *FROM produtos", (err, rows)=>{
         if(err){
             console.error(err);
         }else{
             callback(rows);
         }
     });
+
+
     /*callback será executada após a busca pelo banco de dados. 
      callback é argumento para outra função, que será executada em
      um outro momento, função assíncrona.
@@ -59,10 +61,15 @@ const search = (callback)=>{
     err é um objeto de erro, quer dizer quer que se houver erro.
     Rows é o array de objetos que contém os objetos da pesquisa.
     */
+
+
 }
 
+/* --------AQUI------
+
+
 //prepara para adicionar dados ao nosso bd
-const inserData = db.prepare(
+const inserData = database.prepare(
     `INSERT INTO produtos (ProductName, SupplierID, CategoryID, Unit, Price )
     VALUES (?, ?, ?, ?, ?)`,
     (err)=>{
@@ -77,11 +84,14 @@ const inserData = db.prepare(
     função for executada. 
     (err) é uma função callback que será executada após a preparação
     do SQL.*/
+
+/* --------AQUI------
+
 );
 
 
 //prepara uma consulta para excluir dados do bd.
-const deleteData = db.prepare(
+const deleteData = database.prepare(
     `DELETE FROM produtos WHERE ProductID == ?`,
     (err)=>{
         if(err){
@@ -90,10 +100,11 @@ const deleteData = db.prepare(
             console.log("Dados excluídos com sucesso");
         }
     }
-);
+);       
+
 
 //prepara uma consulta para modificar os dados
-const modofyData = db.prepare(
+const modifyData = database.prepare(
     `UPDATE produtos 
     SET ProductName = ? ,
         SupplierID = ? ,
@@ -109,11 +120,18 @@ const modofyData = db.prepare(
         }
     }
 );
+------ AQUI----- */
 
 //criar servidor e trazer as informações do bd para o servidor.
-
 const server = http.createServer((req, res)=>{
-    //para permitir los CORS e que não tenha problema esse exemplo
+
+    //para permitir o CORS e que não tenha problema esse exemplo. 
+    /*CORS, ou Compartilhamento de Recursos de Origem Cruzada (Cross-Origin Resource Sharing), 
+    é um mecanismo de segurança implementado pelos navegadores da web para controlar quais recursos de 
+    um servidor podem ser acessados por um aplicativo web que está sendo executado em uma origem diferente. */
+
+
+
     res.setHeader("Acess-Control-Allow-Origin", "*" );
     res.setHeader("Acess-Control-Allow-Methods", "GET, POST, PUT, DELETE");
     res.setHeader("Acess-Control-Allow-Headers", "Content-Type");
@@ -123,6 +141,9 @@ const server = http.createServer((req, res)=>{
         res.write(JSON.stringify(result));
         res.end();
     })
+
+    /*-----AQUI---
+
     //verifica se é uma solicitação com o método POST.
     if(req.method === "POST"){
         let body = "";
@@ -146,10 +167,12 @@ const server = http.createServer((req, res)=>{
             console.log("Dados criados com sucesso");
         })
     //verifica se é uma solicitação com o método DELETE
-    }else if(req.method === "DELETE"){
-        let body = "";
-        req.on("data", (chunk)=>{
-            body += chunk;
+    }else if(req.method === "DELETE"){ //=== operador de igualdade estrita -> retorna True se os dois valores forem iguais.
+        let body = "";//body pode ser modificado, body == armazena corpo completo da requisição.
+        req.on("data", (chunk)=>{ //req objeto que representa requisição HTTP quando um servidor recebe uma. On permite registrar ouvintes para eventos específicos.
+            body += chunk; /*Chunk de dados = pedaços de dados enviados na requisição. */
+
+    /* --------AQUI------
         })
         req.on("end", ()=>{
             const parsedBody = JSON.parse(body);
@@ -160,5 +183,30 @@ const server = http.createServer((req, res)=>{
         deleteData.run(parsedBody.ProductID);
         console.log("Dados excluídos com sucesso.");
         });
-    }
+
+        //VERIFICA SE É UMA SOLICITAÇÃO DO MÉTODO PUT. Put = atualizar recurso em um servidor.
+    }else if(req.method === "PUT"){
+        let body = "";
+        req.on("data", (chunk)=>{ 
+            body += chunk;
+        });
+        req.on("end", ()=>{
+            const parsedBody = JSON.parse(body);
+            console.log(parsedBody);
+            //usamos a consulta preparada para modificar dados recebidos do frontend.
+        modifyData.run(
+            parsedBody.ProductName,
+            parsedBody.SupplierID,
+            parsedBody.CategoryID,
+            parsedBody.Unit,
+            parsedBody.Price
+        );
+        console.log("Dados modificados com sucesso.");
+        }
+    )}
+    -----  AQUI  --------*/
 });
+
+const port = 3000;//Define a porta.
+server.listen(port);
+console.log(`Servidor escutando no porto ${port}`);
